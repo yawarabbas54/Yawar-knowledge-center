@@ -1,9 +1,120 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="theme-color" content="#07111f"><title>Yawar Knowledge Center</title><link rel="stylesheet" href="/styles.css"></head>
-<body><div class="app-shell"><aside class="sidebar"><div class="brand"><div class="brand-mark">YK</div><div><strong>Yawar Knowledge</strong><small>AI command center</small></div></div><nav><button class="nav-item active" data-view="chat">✦ <span>AI Assistant</span></button><button class="nav-item" data-view="knowledge">▤ <span>Knowledge</span></button><button class="nav-item" data-view="tasks">◷ <span>Task manager</span></button><button class="nav-item" data-view="settings">⚙ <span>System status</span></button></nav><div class="sidebar-foot"><span class="status-dot"></span><span id="connection-label">Checking server…</span></div></aside>
-<main class="main"><header class="topbar"><div><p class="eyebrow">YOUR PERSONAL AI WORKSPACE</p><h1 id="page-title">AI Assistant</h1></div><div class="top-actions"><span class="pill" id="ai-pill">AI setup checking</span><button class="icon-btn" id="theme-toggle" title="Toggle theme" aria-label="Toggle theme">◐</button></div></header>
-<section id="chat-view" class="view active"><div class="welcome" id="welcome"><div class="orb">✦</div><p class="eyebrow">YAWAR KNOWLEDGE CENTER</p><h2>What can I help you build today?</h2><p class="muted">Ask a question, explore your knowledge, calculate something, or plan your next task.</p><div class="suggestions"><button data-prompt="Explain how AI agents work in simple steps.">Explain AI agents</button><button data-prompt="Help me plan a software project step by step.">Plan a project</button><button data-prompt="Calculate 125 * (8 + 4).">Try calculator</button></div></div><div id="messages" class="messages" aria-live="polite"></div><form id="chat-form" class="composer"><button type="button" class="icon-btn" id="voice-btn" title="Speak" aria-label="Start voice input">🎙</button><textarea id="chat-input" rows="1" maxlength="8000" placeholder="Message Yawar Knowledge Center…" required></textarea><button class="send-btn" id="send-btn" type="submit" aria-label="Send message">↑</button></form><p class="fine-print">AI can make mistakes. Review important information before acting on it.</p></section>
-<section id="knowledge-view" class="view"><div class="panel"><h2>Knowledge library</h2><p class="muted">Save notes and documents, then search them from chat using “search knowledge for …”.</p><form id="knowledge-form" class="stack"><label>Title<input id="knowledge-title" maxlength="180" required placeholder="e.g. My project architecture"></label><label>Content<textarea id="knowledge-content" maxlength="50000" rows="6" required placeholder="Write or paste your notes here…"></textarea></label><label>Tags <input id="knowledge-tags" placeholder="AI, JavaScript, study"></label><button class="primary-btn" type="submit">Save knowledge</button></form><div id="knowledge-list" class="item-list"></div></div></section>
-<section id="tasks-view" class="view"><div class="panel"><h2>Task manager</h2><p class="muted">Create and track tasks. This is a persistent task list; background execution can be added as a separate worker service.</p><form id="task-form" class="inline-form"><input id="task-title" maxlength="180" required placeholder="What needs to get done?"><button class="primary-btn" type="submit">Add task</button></form><div id="task-list" class="item-list"></div></div></section>
-<section id="settings-view" class="view"><div class="panel"><h2>System status</h2><p class="muted">Configuration and feature availability for this deployment.</p><div id="status-grid" class="status-grid"></div><h3>Setup checklist</h3><ol class="setup-list"><li>Copy <code>.env.example</code> to <code>.env</code>.</li><li>Set <code>API_KEY</code> and your AI provider's <code>AI_API_KEY</code>.</li><li>Restart the Node.js server.</li><li>Use HTTPS before exposing the service publicly.</li><li>Only enable telephony after configuring provider credentials and recipient consent.</li></ol></div></section>
-<div id="toast" class="toast" role="status"></div></main></div><script src="/app.js" defer></script></body></html>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#6657e8">
+  <title>Yawar Knowledge Center</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <aside class="sidebar" id="sidebar">
+      <div class="brand">
+        <div class="brand-mark">YK</div>
+        <div><strong>Yawar Knowledge</strong><span>Knowledge Center</span></div>
+      </div>
+      <button class="primary-btn new-note" id="newNoteBtn">＋ New note</button>
+      <nav class="nav-list" aria-label="Main navigation">
+        <button class="nav-item active" data-view="dashboard">⌂ <span>Dashboard</span></button>
+        <button class="nav-item" data-view="knowledge">▤ <span>Knowledge library</span></button>
+        <button class="nav-item" data-view="notes">✎ <span>My notes</span></button>
+        <button class="nav-item" data-view="bookmarks">☆ <span>Bookmarks</span></button>
+        <button class="nav-item" data-view="assistant">✧ <span>AI assistant</span></button>
+        <button class="nav-item" data-view="documents">⇧ <span>Documents</span></button>
+      </nav>
+      <div class="sidebar-bottom">
+        <div class="storage-note"><span class="status-dot"></span> Saved on this device</div>
+        <button class="nav-item" data-view="settings">⚙ <span>Settings</span></button>
+      </div>
+    </aside>
+
+    <main class="main-area">
+      <header class="topbar">
+        <button class="icon-btn mobile-menu" id="menuBtn" aria-label="Open menu">☰</button>
+        <div class="breadcrumbs">Workspace <span>/</span> <strong id="crumb">Dashboard</strong></div>
+        <div class="top-actions">
+          <button class="icon-btn" id="themeBtn" title="Toggle dark/light mode" aria-label="Toggle theme">☾</button>
+          <button class="avatar" title="Yawar">Y</button>
+        </div>
+      </header>
+
+      <section class="content">
+        <div class="view" id="dashboardView">
+          <div class="welcome-row">
+            <div><p class="eyebrow">YOUR PERSONAL WORKSPACE</p><h1>Welcome back, Yawar <span class="wave">✦</span></h1><p class="muted">Collect ideas, organize knowledge, and keep learning.</p></div>
+            <button class="primary-btn" id="quickAddBtn">＋ Create a note</button>
+          </div>
+          <div class="hero-card">
+            <div class="hero-copy"><span class="hero-label">KNOWLEDGE STARTS HERE</span><h2>Your ideas deserve<br>one organized home.</h2><p>Search your notes, save useful resources, and keep your learning moving forward.</p><button class="hero-btn" data-go="knowledge">Explore library <span>→</span></button></div>
+            <div class="hero-art" aria-hidden="true"><div class="orbit orbit-one"></div><div class="orbit orbit-two"></div><div class="book-shape">✦</div><div class="spark spark-one">✧</div><div class="spark spark-two">✦</div></div>
+          </div>
+          <div class="stats-grid">
+            <div class="stat-card"><div class="stat-icon purple">▤</div><span class="muted">Knowledge items</span><strong id="statKnowledge">3</strong><small>Starter resources included</small></div>
+            <div class="stat-card"><div class="stat-icon blue">✎</div><span class="muted">My notes</span><strong id="statNotes">0</strong><small>Your ideas in one place</small></div>
+            <div class="stat-card"><div class="stat-icon gold">☆</div><span class="muted">Bookmarks</span><strong id="statBookmarks">0</strong><small>Saved for later</small></div>
+          </div>
+          <div class="section-heading"><div><h2>Quick access</h2><p class="muted">Pick up where you want to work.</p></div><button class="text-btn" data-go="knowledge">View library →</button></div>
+          <div class="quick-grid">
+            <button class="quick-card" data-go="knowledge"><span class="quick-icon purple">⌕</span><strong>Find knowledge</strong><span class="muted">Search your library</span><span class="card-arrow">↗</span></button>
+            <button class="quick-card" data-go="notes"><span class="quick-icon blue">✎</span><strong>Write an idea</strong><span class="muted">Capture a new thought</span><span class="card-arrow">↗</span></button>
+            <button class="quick-card" data-go="assistant"><span class="quick-icon gold">✧</span><strong>Ask the assistant</strong><span class="muted">Try the demo chat</span><span class="card-arrow">↗</span></button>
+          </div>
+        </div>
+
+        <div class="view hidden" id="knowledgeView">
+          <div class="page-heading"><div><p class="eyebrow">LEARN & DISCOVER</p><h1>Knowledge library</h1><p class="muted">Search the included starter resources or add your own notes.</p></div></div>
+          <div class="search-bar"><span>⌕</span><input id="librarySearch" type="search" placeholder="Search titles, topics, or descriptions…"><kbd>SEARCH</kbd></div>
+          <div class="filter-row" id="categoryFilters"><button class="filter-chip selected" data-category="All">All topics</button><button class="filter-chip" data-category="Programming">Programming</button><button class="filter-chip" data-category="Study">Study skills</button><button class="filter-chip" data-category="AI">Artificial intelligence</button></div>
+          <div class="resource-grid" id="resourceGrid"></div>
+        </div>
+
+        <div class="view hidden" id="notesView">
+          <div class="page-heading"><div><p class="eyebrow">YOUR IDEAS</p><h1>My notes</h1><p class="muted">Notes are saved in this browser on this device.</p></div><button class="primary-btn" id="notesAddBtn">＋ New note</button></div>
+          <div class="note-editor card-panel">
+            <label for="noteTitle">Note title</label><input id="noteTitle" type="text" placeholder="e.g. Ideas for my next project">
+            <label for="noteBody">Your note</label><textarea id="noteBody" rows="4" placeholder="Write your idea, lesson, or reminder…"></textarea>
+            <div class="editor-actions"><span class="muted small">Your notes stay in this browser.</span><button class="primary-btn" id="saveNoteBtn">Save note</button></div>
+          </div>
+          <div class="section-heading"><h2>Saved notes</h2><span class="muted small" id="notesCountLabel">0 notes</span></div>
+          <div class="note-list" id="noteList"></div>
+        </div>
+
+        <div class="view hidden" id="bookmarksView">
+          <div class="page-heading"><div><p class="eyebrow">KEEP IT CLOSE</p><h1>Bookmarks</h1><p class="muted">Resources you mark with a star appear here.</p></div></div>
+          <div class="resource-grid" id="bookmarkGrid"></div>
+          <p class="empty-state hidden" id="emptyBookmarks">No bookmarks yet. Open the Knowledge library and tap ☆ on a resource.</p>
+        </div>
+
+        <div class="view hidden" id="assistantView">
+          <div class="page-heading"><div><p class="eyebrow">YOUR LEARNING COMPANION</p><h1>AI assistant</h1><p class="muted">A ready-to-connect chat interface for your project.</p></div><span class="demo-badge">DEMO MODE</span></div>
+          <div class="assistant-layout">
+            <div class="chat-panel">
+              <div class="chat-header"><div class="assistant-avatar">✧</div><div><strong>Knowledge Assistant</strong><span><i class="status-dot"></i> Local demo · no API connected</span></div><button class="text-btn push-right" id="clearChatBtn">Clear chat</button></div>
+              <div class="chat-messages" id="chatMessages"><div class="message assistant-message"><div class="mini-avatar">✧</div><div class="bubble"><strong>Hello, Yawar!</strong><p>I’m the demo assistant in your Knowledge Center. I can demonstrate the chat interface, but real AI answers require connecting an AI API or model.</p><div class="suggestions"><button data-prompt="How can I organize my programming notes?">Organize programming notes</button><button data-prompt="Give me a study plan for this week">Make a study plan</button></div></div></div></div>
+              <form class="chat-compose" id="chatForm"><input id="chatInput" type="text" placeholder="Ask a question…" autocomplete="off" aria-label="Chat message"><button class="send-btn" type="submit" aria-label="Send message">↑</button></form>
+              <p class="chat-disclaimer">Demo responses are local examples, not generated by an AI model.</p>
+            </div>
+            <aside class="assistant-side"><div class="side-tip"><span class="tip-icon">✦</span><h3>Make it your own</h3><p>When you have an AI API key, connect it through a secure backend. Never place secret API keys in public website JavaScript.</p></div><div class="side-tip"><h3>Try asking</h3><button class="prompt-link" data-prompt="Explain loops in C++ in simple steps">Explain C++ loops →</button><button class="prompt-link" data-prompt="Help me plan a small software project">Plan a software project →</button><button class="prompt-link" data-prompt="How should I revise before an exam?">Revise for an exam →</button></div></aside>
+          </div>
+        </div>
+
+        <div class="view hidden" id="documentsView">
+          <div class="page-heading"><div><p class="eyebrow">YOUR FILES</p><h1>Documents</h1><p class="muted">Choose a text file to read its contents in this browser.</p></div></div>
+          <div class="upload-panel card-panel"><div class="upload-symbol">⇧</div><h2>Bring your knowledge in</h2><p class="muted">Select a .txt, .md, or text-based file. Files are read locally and are not uploaded to a server.</p><label class="upload-button" for="documentInput">Choose a document</label><input id="documentInput" type="file" accept=".txt,.md,.csv,.json,text/plain,text/markdown,application/json" hidden><p class="small muted" id="fileName">No document selected</p></div>
+          <div class="document-preview card-panel hidden" id="documentPreview"><div class="section-heading"><h2 id="documentTitle">Document preview</h2><button class="text-btn" id="saveDocumentNote">Save as note</button></div><pre id="documentText"></pre></div>
+        </div>
+
+        <div class="view hidden" id="settingsView">
+          <div class="page-heading"><div><p class="eyebrow">MAKE IT YOURS</p><h1>Settings</h1><p class="muted">Adjust the appearance of your workspace.</p></div></div>
+          <div class="settings-card card-panel"><h2>Appearance</h2><p class="muted">Choose a theme and accent color.</p><div class="setting-row"><div><strong>Color mode</strong><p class="muted small">Switch between light and dark.</p></div><button class="secondary-btn" id="settingsThemeBtn">Toggle theme</button></div><div class="setting-row"><div><strong>Accent color</strong><p class="muted small">Change buttons and highlights.</p></div><div class="swatches"><button class="swatch" data-color="#6657e8" style="--swatch:#6657e8" aria-label="Purple"></button><button class="swatch" data-color="#1879d2" style="--swatch:#1879d2" aria-label="Blue"></button><button class="swatch" data-color="#0c9875" style="--swatch:#0c9875" aria-label="Green"></button><button class="swatch" data-color="#d05c87" style="--swatch:#d05c87" aria-label="Pink"></button><button class="swatch" data-color="#d97724" style="--swatch:#d97724" aria-label="Orange"></button></div></div></div>
+          <div class="settings-card card-panel"><h2>Data & privacy</h2><p class="muted">Notes, bookmarks, theme, and chat history are saved in your browser using local storage. They do not automatically sync between devices.</p><button class="danger-btn" id="exportBtn">Export my local data</button></div>
+        </div>
+      </section>
+      <footer class="footer">Yawar Knowledge Center <span>•</span> Learn something every day.</footer>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
