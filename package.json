@@ -1,11 +1,21 @@
 {
-  "name": "yawar-knowledge-center",
-  "version": "2.0.0",
+  "name": "yawar-knowledge-center-backend",
+  "version": "1.0.0",
   "private": true,
-  "description": "Extensible AI assistant, knowledge center, voice interface, and safe workflow engine.",
-  "main": "src/index.js",
-  "scripts": {"start":"node src/index.js", "dev":"node --watch src/index.js", "test":"node --test", "check":"node scripts/check.js"},
-  "engines": {"node": ">=18"},
-  "dependencies": {"dotenv":"16.4.5", "express":"4.21.2", "helmet":"7.1.0"},
-  "license":"MIT"
+  "description": "Secure API backend for Yawar Knowledge Center",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node --watch server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.5.0",
+    "helmet": "^8.0.0"
+  }
 }

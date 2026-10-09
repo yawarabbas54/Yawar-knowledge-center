@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: yawar-knowledge-center-api
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_VERSION
+        value: 20
+      - key: AI_BASE_URL
+        value: https://api.openai.com/v1
+      - key: AI_MODEL
+        value: gpt-4o-mini
+      - key: CORS_ORIGINS
+        value: https://yawarabbas54.github.io
+      - key: AI_API_KEY
+        sync: false
